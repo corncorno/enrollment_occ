@@ -97,6 +97,54 @@ class User {
         }
     }
     
+    public function createStudent($student_id, $first_name, $last_name, $email, $phone, $password) {
+        try {
+            $sql = "INSERT INTO users (
+                student_id, 
+                first_name, 
+                last_name, 
+                email, 
+                phone, 
+                password, 
+                role, 
+                status, 
+                enrollment_status,
+                created_at
+            ) VALUES (
+                :student_id,
+                :first_name,
+                :last_name,
+                :email,
+                :phone,
+                :password,
+                'student',
+                'active',
+                'enrolled',
+                NOW()
+            )";
+            
+            $stmt = $this->conn->prepare($sql);
+            $hashed_password = hashPassword($password);
+            
+            $stmt->bindParam(':student_id', $student_id);
+            $stmt->bindParam(':first_name', $first_name);
+            $stmt->bindParam(':last_name', $last_name);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':phone', $phone);
+            $stmt->bindParam(':password', $hashed_password);
+            
+            if ($stmt->execute()) {
+                return $this->conn->lastInsertId();
+            }
+            
+            return false;
+            
+        } catch(PDOException $e) {
+            // Log the error or handle it appropriately
+            return false;
+        }
+    }
+    
     public function updateUserStatus($user_id, $status) {
         try {
             $sql = "UPDATE users SET status = :status WHERE id = :user_id";

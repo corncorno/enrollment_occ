@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../config/database.php';
 require_once '../config/session_helper.php';
 require_once '../classes/User.php';
@@ -112,6 +112,57 @@ if (!$checklist) {
     $checklist = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// Check if student is eligible for next enrollment
+// Eligible if currently in 1st Year Second Semester or higher
+$can_enroll_next = false;
+$next_enrollment_info = [];
+
+if ($enrollment_info && isset($enrollment_info['year_level']) && isset($enrollment_info['semester'])) {
+    $current_year = $enrollment_info['year_level'];
+    $current_semester = $enrollment_info['semester'];
+    
+    // Helper function to check if semester is "second" (handles multiple formats)
+    // Second semester: "Second Semester", "2nd Semester", "Spring"
+    // First semester: "First Semester", "1st Semester", "Fall"
+    $isSecondSemester = (
+        stripos($current_semester, 'Second') !== false || 
+        stripos($current_semester, '2nd') !== false ||
+        stripos($current_semester, 'Spring') !== false
+    );
+    $isFirstSemester = (
+        stripos($current_semester, 'First') !== false || 
+        stripos($current_semester, '1st') !== false ||
+        stripos($current_semester, 'Fall') !== false
+    );
+    
+    // Determine if eligible (1st Year Second Semester or higher)
+    if ($current_year === '1st Year' && $isSecondSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '2nd Year', 'semester' => 'First Semester'];
+    } elseif ($current_year === '2nd Year' && $isFirstSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '2nd Year', 'semester' => 'Second Semester'];
+    } elseif ($current_year === '2nd Year' && $isSecondSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '3rd Year', 'semester' => 'First Semester'];
+    } elseif ($current_year === '3rd Year' && $isFirstSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '3rd Year', 'semester' => 'Second Semester'];
+    } elseif ($current_year === '3rd Year' && $isSecondSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '4th Year', 'semester' => 'First Semester'];
+    } elseif ($current_year === '4th Year' && $isFirstSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '4th Year', 'semester' => 'Second Semester'];
+    } elseif ($current_year === '4th Year' && $isSecondSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '5th Year', 'semester' => 'First Semester'];
+    } elseif ($current_year === '5th Year' && $isFirstSemester) {
+        $can_enroll_next = true;
+        $next_enrollment_info = ['year_level' => '5th Year', 'semester' => 'Second Semester'];
+    }
+}
+
 $message = '';
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
@@ -128,7 +179,7 @@ if (isset($_SESSION['message'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
             min-height: 100vh;
             color: white;
         }
@@ -147,7 +198,7 @@ if (isset($_SESSION['message'])) {
             border-radius: 15px;
         }
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border-radius: 15px 15px 0 0 !important;
         }
@@ -188,7 +239,7 @@ if (isset($_SESSION['message'])) {
             font-size: 1.2em;
         }
         .enrollment-status-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -226,6 +277,11 @@ if (isset($_SESSION['message'])) {
                     <a href="#" class="nav-link" onclick="showSection('enrollment')">
                         <i class="fas fa-clipboard-check me-2"></i>Enrollment Status
                     </a>
+                    <?php if ($can_enroll_next): ?>
+                    <a href="#" class="nav-link" onclick="showSection('next-enrollment')">
+                        <i class="fas fa-calendar-plus me-2"></i>Enroll for Next Semester
+                    </a>
+                    <?php endif; ?>
                     <a href="logout.php" class="nav-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
@@ -772,6 +828,204 @@ if (isset($_SESSION['message'])) {
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <?php if ($can_enroll_next): ?>
+            <!-- Next Enrollment Section -->
+            <div id="next-enrollment" class="content-section" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2><i class="fas fa-calendar-plus me-2"></i>Enroll for Next Semester</h2>
+                        <p class="text-muted">Select sections for <?php echo htmlspecialchars($next_enrollment_info['year_level'] . ' - ' . $next_enrollment_info['semester']); ?></p>
+                    </div>
+                </div>
+                
+                <?php
+                // Get current program from enrollment info
+                $current_program = $enrollment_info['display_program'] ?? $enrollment_info['course'] ?? '';
+                $next_year = $next_enrollment_info['year_level'];
+                $next_semester = $next_enrollment_info['semester'];
+                
+                // Get available sections for next semester
+                $sections_query = "SELECT 
+                    s.id,
+                    s.section_name,
+                    s.year_level,
+                    s.semester,
+                    s.academic_year,
+                    s.max_capacity,
+                    s.current_enrolled,
+                    s.section_type,
+                    p.program_code,
+                    p.program_name
+                FROM sections s
+                JOIN programs p ON s.program_id = p.id
+                WHERE s.year_level = :year_level
+                AND s.semester = :semester
+                ORDER BY p.program_code, s.section_name";
+                
+                $sections_stmt = $conn->prepare($sections_query);
+                $sections_stmt->bindParam(':year_level', $next_year);
+                $sections_stmt->bindParam(':semester', $next_semester);
+                $sections_stmt->execute();
+                $available_sections = $sections_stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Check if student already enrolled for next semester
+                $check_next_enrollment = "SELECT se.*, s.section_name, s.year_level, s.semester
+                                         FROM section_enrollments se
+                                         JOIN sections s ON se.section_id = s.id
+                                         WHERE se.user_id = :user_id
+                                         AND s.year_level = :year_level
+                                         AND s.semester = :semester
+                                         AND se.status = 'active'";
+                $check_stmt = $conn->prepare($check_next_enrollment);
+                $check_stmt->bindParam(':user_id', $_SESSION['user_id']);
+                $check_stmt->bindParam(':year_level', $next_year);
+                $check_stmt->bindParam(':semester', $next_semester);
+                $check_stmt->execute();
+                $next_enrollments = $check_stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                
+                <?php if (count($next_enrollments) > 0): ?>
+                    <!-- Already Enrolled -->
+                    <div class="alert alert-success">
+                        <h5><i class="fas fa-check-circle me-2"></i>You're Already Enrolled for Next Semester!</h5>
+                        <p class="mb-2">You have successfully enrolled in the following sections:</p>
+                        <ul class="mb-0">
+                            <?php foreach ($next_enrollments as $enrollment): ?>
+                                <li>
+                                    <strong><?php echo htmlspecialchars($enrollment['section_name']); ?></strong>
+                                    - <?php echo htmlspecialchars($enrollment['year_level'] . ' - ' . $enrollment['semester']); ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php else: ?>
+                    <!-- Enrollment Form -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Next Enrollment Period:</strong> You can now enroll for <?php echo htmlspecialchars($next_year . ' - ' . $next_semester); ?>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Sections</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Program</label>
+                                    <select class="form-select" id="filter_next_program" onchange="filterNextSections()">
+                                        <option value="">All Programs</option>
+                                        <?php
+                                        $programs_list = [];
+                                        foreach ($available_sections as $sec) {
+                                            if (!in_array($sec['program_code'], $programs_list)) {
+                                                $programs_list[] = $sec['program_code'];
+                                                $selected = ($sec['program_code'] === $current_program) ? 'selected' : '';
+                                                echo '<option value="' . htmlspecialchars($sec['program_code']) . '" ' . $selected . '>' . htmlspecialchars($sec['program_code']) . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Section Type</label>
+                                    <select class="form-select" id="filter_next_type" onchange="filterNextSections()">
+                                        <option value="">All Types</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Irregular">Irregular</option>
+                                        <option value="Special">Special</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Search Section</label>
+                                    <input type="text" class="form-control" id="search_next_section" placeholder="Search..." onkeyup="filterNextSections()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Available Sections -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Available Sections</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="next_sections_list" class="row">
+                                <?php if (count($available_sections) > 0): ?>
+                                    <?php foreach ($available_sections as $section): ?>
+                                        <?php
+                                        $is_full = $section['current_enrolled'] >= $section['max_capacity'];
+                                        $percentage = ($section['max_capacity'] > 0) ? ($section['current_enrolled'] / $section['max_capacity']) * 100 : 0;
+                                        ?>
+                                        <div class="col-md-6 mb-3 section-card" 
+                                             data-program="<?php echo htmlspecialchars($section['program_code']); ?>"
+                                             data-type="<?php echo htmlspecialchars($section['section_type']); ?>"
+                                             data-name="<?php echo htmlspecialchars($section['section_name']); ?>">
+                                            <div class="card h-100 <?php echo $is_full ? 'border-danger' : 'border-primary'; ?>">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <?php echo htmlspecialchars($section['section_name']); ?>
+                                                        <?php if ($is_full): ?>
+                                                            <span class="badge bg-danger ms-2">Full</span>
+                                                        <?php endif; ?>
+                                                    </h5>
+                                                    <p class="mb-2">
+                                                        <i class="fas fa-graduation-cap me-2"></i>
+                                                        <strong><?php echo htmlspecialchars($section['program_code']); ?></strong>
+                                                        - <?php echo htmlspecialchars($section['program_name']); ?>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <i class="fas fa-calendar me-2"></i>
+                                                        <?php echo htmlspecialchars($section['year_level'] . ' - ' . $section['semester']); ?>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <i class="fas fa-clock me-2"></i>
+                                                        <?php echo htmlspecialchars($section['academic_year']); ?>
+                                                    </p>
+                                                    <p class="mb-2">
+                                                        <i class="fas fa-tag me-2"></i>
+                                                        Type: <?php echo htmlspecialchars($section['section_type']); ?>
+                                                    </p>
+                                                    <div class="mb-3">
+                                                        <small class="text-muted">Capacity:</small>
+                                                        <div class="progress">
+                                                            <div class="progress-bar <?php echo $percentage >= 90 ? 'bg-danger' : ($percentage >= 70 ? 'bg-warning' : 'bg-success'); ?>" 
+                                                                 style="width: <?php echo $percentage . '%'; ?>">
+                                                                <?php echo $section['current_enrolled']; ?> / <?php echo $section['max_capacity']; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php if (!$is_full): ?>
+                                                        <button class="btn btn-primary w-100" 
+                                                                onclick="enrollNextSemester(<?php echo $section['id']; ?>, '<?php echo htmlspecialchars($section['section_name'], ENT_QUOTES); ?>')">
+                                                            <i class="fas fa-check me-2"></i>Enroll in This Section
+                                                        </button>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-secondary w-100" disabled>
+                                                            <i class="fas fa-times me-2"></i>Section Full
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="col-12">
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            No sections available for <?php echo htmlspecialchars($next_year . ' - ' . $next_semester); ?> yet.
+                                            Please check back later.
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     
@@ -791,7 +1045,7 @@ if (isset($_SESSION['message'])) {
                 <div class="text-center mb-3">
                     <i class="fas fa-robot fa-3x text-primary"></i>
                 </div>
-                <h6>Hello! I'm your virtual assistant 👋</h6>
+                <h6>Hello! I'm your virtual assistant ðŸ‘‹</h6>
                 <p class="small text-muted">I can help you with:</p>
                 <ul class="small text-muted">
                     <li>Enrollment information</li>
@@ -824,7 +1078,7 @@ if (isset($_SESSION['message'])) {
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border: none;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -866,7 +1120,7 @@ if (isset($_SESSION['message'])) {
         }
         
         .chatbot-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             padding: 15px;
             border-radius: 15px 15px 0 0;
@@ -1180,6 +1434,58 @@ if (isset($_SESSION['message'])) {
             
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Next Enrollment Functions
+        function filterNextSections() {
+            const programFilter = document.getElementById('filter_next_program').value.toLowerCase();
+            const typeFilter = document.getElementById('filter_next_type').value.toLowerCase();
+            const searchText = document.getElementById('search_next_section').value.toLowerCase();
+            
+            const sectionCards = document.querySelectorAll('#next_sections_list .section-card');
+            
+            sectionCards.forEach(card => {
+                const program = card.getAttribute('data-program').toLowerCase();
+                const type = card.getAttribute('data-type').toLowerCase();
+                const name = card.getAttribute('data-name').toLowerCase();
+                
+                const programMatch = !programFilter || program === programFilter;
+                const typeMatch = !typeFilter || type === typeFilter;
+                const searchMatch = !searchText || name.includes(searchText);
+                
+                if (programMatch && typeMatch && searchMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function enrollNextSemester(sectionId, sectionName) {
+            if (!confirm('Are you sure you want to enroll in ' + sectionName + ' for next semester?')) {
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('section_id', sectionId);
+            
+            fetch('process_next_enrollment.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Success! You have been enrolled for next semester.');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while enrolling. Please try again.');
+            });
         }
     </script>
     

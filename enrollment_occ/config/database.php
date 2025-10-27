@@ -23,18 +23,21 @@ class Database {
 }
 
 // Session configuration
-// Enable multiple concurrent sessions in the same browser
-ini_set('session.use_only_cookies', 0);
-ini_set('session.use_trans_sid', 1);
+// Only configure and start session if one isn't already active
+if (session_status() === PHP_SESSION_NONE) {
+    // Enable multiple concurrent sessions in the same browser
+    ini_set('session.use_only_cookies', 0);
+    ini_set('session.use_trans_sid', 1);
 
-// Check if a session ID is passed via URL (for multi-session support)
-if (isset($_GET['session_id']) && !empty($_GET['session_id'])) {
-    session_id($_GET['session_id']);
-} elseif (isset($_POST['session_id']) && !empty($_POST['session_id'])) {
-    session_id($_POST['session_id']);
+    // Check if a session ID is passed via URL (for multi-session support)
+    if (isset($_GET['session_id']) && !empty($_GET['session_id'])) {
+        session_id($_GET['session_id']);
+    } elseif (isset($_POST['session_id']) && !empty($_POST['session_id'])) {
+        session_id($_POST['session_id']);
+    }
+
+    session_start();
 }
-
-session_start();
 
 // Store the current session ID for passing in URLs
 define('CURRENT_SESSION_ID', session_id());

@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             width: 100%;
         }
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
         .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             border: none;
             border-radius: 50px;
             padding: 12px 30px;
@@ -155,6 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
             
             <hr class="my-4">
+            <div class="text-center mb-3">
+                <small class="text-muted">
+                    Don't have an account? <a href="register.php">Register here</a><br>
+                    Existing student? <a href="claim_account.php" class="text-primary fw-bold">Claim your account</a>
+                </small>
+            </div>
             <div class="text-center">
                 <small class="text-muted">Demo Accounts:</small><br>
                 <small class="text-info">Admin: admin@occ.edu / admin123</small>

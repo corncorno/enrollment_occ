@@ -134,7 +134,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             min-height: 100vh;
             color: white;
         }
@@ -153,12 +153,12 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
             border-radius: 15px;
         }
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border-radius: 15px 15px 0 0 !important;
         }
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border-radius: 15px;
         }
@@ -176,7 +176,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         
         .filter-card .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
             border-radius: 8px 8px 0 0;
             transition: background-color 0.3s ease;
@@ -286,6 +286,9 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                     <a href="#" class="nav-link" onclick="showSection('chatbot')">
                         <i class="fas fa-robot me-2"></i>Chatbot FAQs
+                    </a>
+                    <a href="bulk_import.php" class="nav-link">
+                        <i class="fas fa-file-import me-2"></i>Bulk Import
                     </a>
                     <a href="../student/logout.php" class="nav-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
@@ -806,7 +809,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <h5 class="mb-0"><i class="fas fa-list me-2"></i>All FAQs</h5>
                             <button class="btn btn-primary" onclick="showAddFAQModal()">
                                 <i class="fas fa-plus me-2"></i>Add New FAQ
-                            </button>
+                        </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -838,22 +841,22 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Student Inquiries</h5>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Student</th>
                                             <th>Question</th>
                                             <th>Answer</th>
                                             <th>Date</th>
-                                        </tr>
-                                    </thead>
+                                </tr>
+                            </thead>
                                     <tbody id="inquiriesTableBody">
                                         <tr>
                                             <td colspan="4" class="text-center">Loading inquiries...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                    </tr>
+                            </tbody>
+                        </table>
                             </div>
                         </div>
                     </div>
@@ -1568,18 +1571,18 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                     <h5 class="modal-title">Edit Enrolled Student - Manage Sections</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                    <div class="modal-body">
                     <input type="hidden" id="enrolled_user_id">
-                    <h6 id="enrolled_student_name" class="mb-3"></h6>
-                    
+                        <h6 id="enrolled_student_name" class="mb-3"></h6>
+                        
                     <!-- Current Sections -->
                     <div class="mb-4">
                         <h6 class="text-primary"><i class="fas fa-users me-2"></i>Current Section Assignments</h6>
                         <div id="edit_current_sections_list" class="mb-3">
                             <p class="text-muted">Loading...</p>
                         </div>
-                    </div>
-                    
+                        </div>
+                        
                     <hr>
                     
                     <!-- Section Details Display -->
@@ -1617,7 +1620,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                     <hr>
                     
                     <!-- Change/Add Section -->
-                    <div class="mb-3">
+                        <div class="mb-3">
                         <h6 class="text-success"><i class="fas fa-exchange-alt me-2"></i>Change or Add Section</h6>
                         <p class="text-muted small">Select criteria to find and assign a different section</p>
                         
@@ -1635,12 +1638,12 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label for="edit_filter_year" class="form-label small">Year Level:</label>
                                 <select class="form-select form-select-sm" id="edit_filter_year" onchange="filterEditSections()">
                                     <option value="">Select Year Level</option>
-                                    <option value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
-                                    <option value="5th Year">5th Year</option>
-                                </select>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                                <option value="5th Year">5th Year</option>
+                            </select>
                             </div>
                         </div>
                         
@@ -1652,7 +1655,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="First Semester">First Semester</option>
                                     <option value="Second Semester">Second Semester</option>
                                     <option value="Summer">Summer</option>
-                                </select>
+                            </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="edit_filter_type" class="form-label small">Section Type:</label>
@@ -1678,8 +1681,8 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </div>
-    </div>
-    
+                        </div>
+                        
     <!-- View Section Students Modal -->
     <div class="modal fade" id="viewSectionStudentsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -1747,7 +1750,7 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     
                     <!-- Section Selection -->
-                    <div class="mb-3">
+                        <div class="mb-3">
                         <label class="form-label"><strong>Select Section to Assign:</strong></label>
                         
                         <!-- Filters Card -->
@@ -1831,11 +1834,11 @@ $latest_enrollments = $latest_enrollments_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div id="sections_list" style="max-height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;">
                             <p class="text-muted text-center">Loading sections...</p>
                         </div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
+                    <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
