@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCC Enrollment System - Data Flow Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .section h3 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .diagram-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .mermaid {
+            text-align: center;
+            min-height: 400px;
+        }
+        
+        .description {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .description li {
+            margin: 8px 0;
+        }
+        
+        .nav-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .nav-menu h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        .nav-menu a {
+            display: block;
+            padding: 8px 12px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #667eea;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .nav-menu a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .process-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .process-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .process-card strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        @media print {
+            .nav-menu {
+                display: none;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-menu">
+        <h4>Quick Navigation</h4>
+        <a href="#context">Context Diagram</a>
+        <a href="#level0">Level 0 DFD</a>
+        <a href="#level1">Level 1 DFDs</a>
+    </div>
+    
+    <div class="container">
+        <h1>OCC Enrollment System</h1>
+        <p class="subtitle">Comprehensive Data Flow Diagrams (DFD)</p>
+        
+        <!-- Context Diagram -->
+        <div class="section" id="context">
+            <h2>Context Diagram (Level 0)</h2>
+            <div class="description">
+                <p><strong>Overview:</strong> The Context Diagram represents the highest level view of the OCC Enrollment System, showing the system as a single process and its interactions with external entities.</p>
+                <p><strong>External Entities:</strong></p>
+                <ul>
+                    <li><strong>Student</strong> - Primary user who registers, applies for enrollment, uploads documents, views schedules and grades</li>
+                    <li><strong>Admin/Registrar</strong> - System administrator who manages users, curriculum, sections, schedules, approves enrollments, generates CORs, and manages grades</li>
+                    <li><strong>Admission Officer</strong> - Handles applicant processing, document verification, student number assignment, and enrollment control</li>
+                    <li><strong>Program Head</strong> - Submits curriculum proposals for their respective programs</li>
+                    <li><strong>Dean</strong> - Reviews and approves curriculum submissions, views enrollment reports</li>
+                    <li><strong>Registrar Staff</strong> - Assists with enrollment processes and administrative tasks</li>
+                </ul>
+            </div>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin/Registrar]
+    Admission[Admission Officer]
+    ProgramHead[Program Head]
+    Dean[Dean]
+    RegistrarStaff[Registrar Staff]
+    System[OCC Enrollment System]
+    
+    Student -->|Student Registration Data| System
+    Student -->|Application Data| System
+    Student -->|Document Uploads| System
+    Student -->|Enrollment Request| System
+    Student -->|Login Credentials| System
+    Student -->|Query| System
+    
+    System -->|Account Status| Student
+    System -->|Student Schedule| Student
+    System -->|Student Grades| Student
+    System -->|Student COR| Student
+    System -->|Enrollment Status| Student
+    System -->|Chatbot Response| Student
+    
+    Admin -->|User Management Commands| System
+    Admin -->|Curriculum Management| System
+    Admin -->|Section Management| System
+    Admin -->|Schedule Management| System
+    Admin -->|Enrollment Approval| System
+    Admin -->|Grade Entry| System
+    Admin -->|COR Generation Request| System
+    
+    System -->|User List| Admin
+    System -->|Enrollment Reports| Admin
+    System -->|Curriculum Data| Admin
+    System -->|Section Information| Admin
+    System -->|Grade Reports| Admin
+    
+    Admission -->|Document Verification| System
+    Admission -->|Student Number Assignment| System
+    Admission -->|Enrollment Control| System
+    Admission -->|Applicant Processing| System
+    
+    System -->|Applicant List| Admission
+    System -->|Document Status| Admission
+    System -->|Enrollment Control Status| Admission
+    
+    ProgramHead -->|Curriculum Submission| System
+    ProgramHead -->|Login Credentials| System
+    
+    System -->|Curriculum Submission Status| ProgramHead
+    System -->|Program Data| ProgramHead
+    
+    Dean -->|Curriculum Approval| System
+    Dean -->|Login Credentials| System
+    
+    System -->|Curriculum Submissions| Dean
+    System -->|Enrollment Reports| Dean
+    
+    RegistrarStaff -->|Enrollment Assistance| System
+    RegistrarStaff -->|Login Credentials| System
+    
+    System -->|Enrollment Data| RegistrarStaff
+    
+    style System fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    style Student fill:#fff3e0,stroke:#e65100
+    style Admin fill:#f3e5f5,stroke:#4a148c
+    style Admission fill:#e8f5e9,stroke:#1b5e20
+    style ProgramHead fill:#fff9c4,stroke:#f57f17
+    style Dean fill:#fce4ec,stroke:#880e4f
+    style RegistrarStaff fill:#e0f2f1,stroke:#004d40
+                </div>
+            </div>
+        </div>
+        
+        <!-- Level 0 DFD -->
+        <div class="section" id="level0">
+            <h2>Level 0 DFD</h2>
+            <div class="description">
+                <p><strong>Overview:</strong> The Level 0 DFD decomposes the OCC Enrollment System into major processes, showing how data flows between processes, external entities, and data stores.</p>
+                <p><strong>Major Processes:</strong></p>
+                <div class="process-list">
+                    <div class="process-card"><strong>1.0 User Management</strong> - Handles user registration, authentication, and account management</div>
+                    <div class="process-card"><strong>2.0 Application Processing</strong> - Manages student applications, document verification, and applicant workflow</div>
+                    <div class="process-card"><strong>3.0 Curriculum Management</strong> - Handles curriculum submissions, reviews, and approvals</div>
+                    <div class="process-card"><strong>4.0 Enrollment Processing</strong> - Manages enrollment requests, section assignments, and schedule creation</div>
+                    <div class="process-card"><strong>5.0 Grade Management</strong> - Handles grade entry, verification, and viewing</div>
+                    <div class="process-card"><strong>6.0 Document Management</strong> - Manages document uploads, verification, and status updates</div>
+                    <div class="process-card"><strong>7.0 Reporting</strong> - Generates enrollment reports and analytics</div>
+                    <div class="process-card"><strong>8.0 Chatbot Service</strong> - Processes queries and provides FAQ responses</div>
+                </div>
+            </div>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin/Registrar]
+    Admission[Admission Officer]
+    ProgramHead[Program Head]
+    Dean[Dean]
+    RegistrarStaff[Registrar Staff]
+    
+    P1[1.0<br/>User Management]
+    P2[2.0<br/>Application Processing]
+    P3[3.0<br/>Curriculum Management]
+    P4[4.0<br/>Enrollment Processing]
+    P5[5.0<br/>Grade Management]
+    P6[6.0<br/>Document Management]
+    P7[7.0<br/>Reporting]
+    P8[8.0<br/>Chatbot Service]
+    
+    D1[("D1: Users")]
+    D2[("D2: Admins")]
+    D3[("D3: Admissions")]
+    D4[("D4: Program Heads")]
+    D5[("D5: Applicants")]
+    D6[("D6: Enrolled Students")]
+    D7[("D7: Curriculum")]
+    D8[("D8: Curriculum Submissions")]
+    D9[("D9: Sections")]
+    D10[("D10: Section Enrollments")]
+    D11[("D11: Schedules")]
+    D12[("D12: Student Schedules")]
+    D13[("D13: Documents")]
+    D14[("D14: Student Grades")]
+    D15[("D15: Certificate of Registration")]
+    D16[("D16: Enrollment Control")]
+    D17[("D17: Chatbot FAQs")]
+    D18[("D18: Chatbot History")]
+    D19[("D19: Enrollment Reports")]
+    
+    Student -->|Student Registration Data| P1
+    Student -->|Application Data| P2
+    Student -->|Document Uploads| P6
+    Student -->|Enrollment Request| P4
+    Student -->|Login Credentials| P1
+    Student -->|Query| P8
+    
+    P1 -->|Account Status| Student
+    P2 -->|Enrollment Status| Student
+    P4 -->|Student Schedule| Student
+    P4 -->|Student COR| Student
+    P5 -->|Student Grades| Student
+    P8 -->|Chatbot Response| Student
+    
+    Admin -->|User Management Commands| P1
+    Admin -->|Curriculum Management| P3
+    Admin -->|Section Management| P4
+    Admin -->|Schedule Management| P4
+    Admin -->|Enrollment Approval| P4
+    Admin -->|Grade Entry| P5
+    Admin -->|COR Generation Request| P7
+    
+    P1 -->|User List| Admin
+    P3 -->|Curriculum Data| Admin
+    P4 -->|Section Information| Admin
+    P5 -->|Grade Reports| Admin
+    P7 -->|Enrollment Reports| Admin
+    
+    Admission -->|Document Verification| P6
+    Admission -->|Student Number Assignment| P2
+    Admission -->|Enrollment Control| P2
+    Admission -->|Applicant Processing| P2
+    
+    P2 -->|Applicant List| Admission
+    P6 -->|Document Status| Admission
+    P2 -->|Enrollment Control Status| Admission
+    
+    ProgramHead -->|Curriculum Submission| P3
+    ProgramHead -->|Login Credentials| P1
+    
+    P3 -->|Curriculum Submission Status| ProgramHead
+    P1 -->|Program Data| ProgramHead
+    
+    Dean -->|Curriculum Approval| P3
+    Dean -->|Login Credentials| P1
+    
+    P3 -->|Curriculum Submissions| Dean
+    P7 -->|Enrollment Reports| Dean
+    
+    RegistrarStaff -->|Enrollment Assistance| P4
+    RegistrarStaff -->|Login Credentials| P1
+    
+    P4 -->|Enrollment Data| RegistrarStaff
+    
+    P1 <--> D1
+    P1 --> D2
+    P1 --> D3
+    P1 --> D4
+    
+    P2 <--> D5
+    P2 <--> D1
+    P2 --> D16
+    
+    P3 <--> D7
+    P3 <--> D8
+    P3 --> D4
+    P3 --> D2
+    
+    P4 <--> D6
+    P4 <--> D9
+    P4 <--> D10
+    P4 <--> D11
+    P4 <--> D12
+    P4 <--> D15
+    P4 --> D7
+    P4 --> D1
+    P4 --> D14
+    
+    P5 <--> D14
+    P5 --> D1
+    P5 --> D12
+    
+    P6 <--> D13
+    P6 --> D1
+    
+    P7 --> D6
+    P7 --> D9
+    P7 --> D10
+    P7 --> D1
+    P7 <--> D19
+    P7 <--> D15
+    
+    P8 --> D17
+    P8 <--> D18
+    
+    style P1 fill:#e3f2fd,stroke:#1976d2
+    style P2 fill:#e8f5e9,stroke:#388e3c
+    style P3 fill:#fff3e0,stroke:#f57c00
+    style P4 fill:#f3e5f5,stroke:#7b1fa2
+    style P5 fill:#fce4ec,stroke:#c2185b
+    style P6 fill:#e0f2f1,stroke:#00796b
+    style P7 fill:#fff9c4,stroke:#f9a825
+    style P8 fill:#e1bee7,stroke:#8e24aa
+                </div>
+            </div>
+        </div>
+        
+        <!-- Level 1 DFDs -->
+        <div class="section" id="level1">
+            <h2>Level 1 DFDs</h2>
+            <div class="description">
+                <p><strong>Overview:</strong> Level 1 DFDs provide detailed breakdowns of each major process from the Level 0 DFD, showing sub-processes and their interactions with data stores and external entities.</p>
+            </div>
+            
+            <!-- 1.0 User Management -->
+            <h3>1.0 User Management (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin]
+    AllUsers[All User Types]
+    
+    P11[1.1<br/>Register User]
+    P12[1.2<br/>Authenticate User]
+    P13[1.3<br/>Approve User Account]
+    P14[1.4<br/>Update User Status]
+    
+    D1[("D1: Users")]
+    D2[("D2: Admins")]
+    D3[("D3: Admissions")]
+    D4[("D4: Program Heads")]
+    
+    Student -->|Student Registration Data| P11
+    AllUsers -->|Login Credentials| P12
+    Admin -->|User Management Commands| P13
+    Admin -->|User Management Commands| P14
+    
+    P11 -->|Account Status| Student
+    P12 -->|Authentication Result| AllUsers
+    P13 -->|User List| Admin
+    P14 -->|User List| Admin
+    
+    P11 -->|Write| D1
+    P12 -->|Read| D1
+    P12 -->|Read| D2
+    P12 -->|Read| D3
+    P12 -->|Read| D4
+    P13 -->|Read/Write| D1
+    P14 -->|Read/Write| D1
+    
+    style P11 fill:#e3f2fd,stroke:#1976d2
+    style P12 fill:#e3f2fd,stroke:#1976d2
+    style P13 fill:#e3f2fd,stroke:#1976d2
+    style P14 fill:#e3f2fd,stroke:#1976d2
+                </div>
+            </div>
+            
+            <!-- 2.0 Application Processing -->
+            <h3>2.0 Application Processing (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admission[Admission Officer]
+    
+    P21[2.1<br/>Submit Application]
+    P22[2.2<br/>Verify Documents]
+    P23[2.3<br/>Assign Student Number]
+    P24[2.4<br/>Pass to Registrar]
+    
+    D1[("D1: Users")]
+    D5[("D5: Applicants")]
+    D13[("D13: Documents")]
+    D16[("D16: Enrollment Control")]
+    
+    Student -->|Application Data| P21
+    Admission -->|Document Verification| P22
+    Admission -->|Student Number Assignment| P23
+    Admission -->|Applicant Processing| P24
+    
+    P21 -->|Enrollment Status| Student
+    P22 -->|Document Status| Admission
+    P24 -->|Applicant List| Admission
+    P24 -->|Enrollment Control Status| Admission
+    
+    P21 -->|Write| D5
+    P21 -->|Read/Write| D1
+    P22 -->|Read/Write| D13
+    P23 -->|Read/Write| D1
+    P23 -->|Read/Write| D5
+    P24 -->|Read/Write| D5
+    P24 -->|Read| D16
+    P24 -->|Read/Write| D1
+    
+    style P21 fill:#e8f5e9,stroke:#388e3c
+    style P22 fill:#e8f5e9,stroke:#388e3c
+    style P23 fill:#e8f5e9,stroke:#388e3c
+    style P24 fill:#e8f5e9,stroke:#388e3c
+                </div>
+            </div>
+            
+            <!-- 3.0 Curriculum Management -->
+            <h3>3.0 Curriculum Management (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    ProgramHead[Program Head]
+    Admin[Admin]
+    Dean[Dean]
+    
+    P31[3.1<br/>Submit Curriculum]
+    P32[3.2<br/>Review Curriculum]
+    P33[3.3<br/>Approve Curriculum]
+    P34[3.4<br/>Sync Approved Curriculum]
+    
+    D4[("D4: Program Heads")]
+    D7[("D7: Curriculum")]
+    D8[("D8: Curriculum Submissions")]
+    D2[("D2: Admins")]
+    
+    ProgramHead -->|Curriculum Submission| P31
+    Admin -->|Curriculum Management| P32
+    Dean -->|Curriculum Approval| P33
+    
+    P31 -->|Curriculum Submission Status| ProgramHead
+    P32 -->|Curriculum Data| Admin
+    P33 -->|Curriculum Submissions| Dean
+    
+    P31 -->|Write| D8
+    P31 -->|Read| D4
+    P32 -->|Read/Write| D8
+    P32 -->|Read| D2
+    P33 -->|Read/Write| D8
+    P34 -->|Read| D8
+    P34 -->|Write| D7
+    
+    P32 -.->|Trigger| P34
+    P33 -.->|Trigger| P34
+    
+    style P31 fill:#fff3e0,stroke:#f57c00
+    style P32 fill:#fff3e0,stroke:#f57c00
+    style P33 fill:#fff3e0,stroke:#f57c00
+    style P34 fill:#fff3e0,stroke:#f57c00
+                </div>
+            </div>
+            
+            <!-- 4.0 Enrollment Processing -->
+            <h3>4.0 Enrollment Processing (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin]
+    
+    P41[4.1<br/>Submit Enrollment Request]
+    P42[4.2<br/>Review Enrollment Request]
+    P43[4.3<br/>Assign to Section]
+    P44[4.4<br/>Create Schedule]
+    P45[4.5<br/>Generate COR]
+    
+    D1[("D1: Users")]
+    D6[("D6: Enrolled Students")]
+    D7[("D7: Curriculum")]
+    D9[("D9: Sections")]
+    D10[("D10: Section Enrollments")]
+    D11[("D11: Schedules")]
+    D12[("D12: Student Schedules")]
+    D14[("D14: Student Grades")]
+    D15[("D15: Certificate of Registration")]
+    
+    Student -->|Enrollment Request| P41
+    Admin -->|Enrollment Approval| P42
+    Admin -->|Section Management| P43
+    Admin -->|Schedule Management| P44
+    Admin -->|COR Generation Request| P45
+    
+    P41 -->|Enrollment Status| Student
+    P42 -->|Section Information| Admin
+    P43 -->|Section Information| Admin
+    P44 -->|Section Information| Admin
+    P45 -->|Student COR| Student
+    
+    P41 -->|Write| D6
+    P41 -->|Read| D1
+    P41 -->|Read| D7
+    P42 -->|Read/Write| D6
+    P42 -->|Read| D14
+    P43 -->|Read/Write| D9
+    P43 -->|Read/Write| D10
+    P43 -->|Read/Write| D6
+    P44 -->|Read/Write| D11
+    P44 -->|Read| D7
+    P44 -->|Read| D9
+    P45 -->|Read| D6
+    P45 -->|Read| D10
+    P45 -->|Read| D12
+    P45 -->|Write| D15
+    
+    P43 -.->|Creates| P44
+    P43 -.->|Triggers| P45
+    
+    style P41 fill:#f3e5f5,stroke:#7b1fa2
+    style P42 fill:#f3e5f5,stroke:#7b1fa2
+    style P43 fill:#f3e5f5,stroke:#7b1fa2
+    style P44 fill:#f3e5f5,stroke:#7b1fa2
+    style P45 fill:#f3e5f5,stroke:#7b1fa2
+                </div>
+            </div>
+            
+            <!-- 5.0 Grade Management -->
+            <h3>5.0 Grade Management (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin]
+    
+    P51[5.1<br/>Enter Grades]
+    P52[5.2<br/>Verify Grades]
+    P53[5.3<br/>View Grades]
+    
+    D1[("D1: Users")]
+    D12[("D12: Student Schedules")]
+    D14[("D14: Student Grades")]
+    
+    Admin -->|Grade Entry| P51
+    Admin -->|Grade Entry| P52
+    Student -->|View Request| P53
+    Admin -->|View Request| P53
+    
+    P51 -->|Grade Reports| Admin
+    P52 -->|Grade Reports| Admin
+    P53 -->|Student Grades| Student
+    P53 -->|Grade Reports| Admin
+    
+    P51 -->|Write| D14
+    P51 -->|Read| D12
+    P52 -->|Read/Write| D14
+    P53 -->|Read| D14
+    P53 -->|Read| D1
+    P53 -->|Read| D12
+    
+    style P51 fill:#fce4ec,stroke:#c2185b
+    style P52 fill:#fce4ec,stroke:#c2185b
+    style P53 fill:#fce4ec,stroke:#c2185b
+                </div>
+            </div>
+            
+            <!-- 6.0 Document Management -->
+            <h3>6.0 Document Management (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admission[Admission Officer]
+    
+    P61[6.1<br/>Upload Document]
+    P62[6.2<br/>Verify Document]
+    P63[6.3<br/>Update Document Status]
+    
+    D1[("D1: Users")]
+    D13[("D13: Documents")]
+    
+    Student -->|Document Uploads| P61
+    Admission -->|Document Verification| P62
+    
+    P61 -->|Upload Confirmation| Student
+    P62 -->|Document Status| Admission
+    P63 -->|Document Status| Admission
+    
+    P61 -->|Write| D13
+    P61 -->|Read| D1
+    P62 -->|Read| D13
+    P62 -.->|Trigger| P63
+    P63 -->|Read/Write| D13
+    
+    style P61 fill:#e0f2f1,stroke:#00796b
+    style P62 fill:#e0f2f1,stroke:#00796b
+    style P63 fill:#e0f2f1,stroke:#00796b
+                </div>
+            </div>
+            
+            <!-- 7.0 Reporting -->
+            <h3>7.0 Reporting (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    Admin[Admin]
+    Dean[Dean]
+    
+    P71[7.1<br/>Generate Enrollment Reports]
+    P72[7.2<br/>View Reports]
+    P73[7.3<br/>Generate COR]
+    
+    D1[("D1: Users")]
+    D6[("D6: Enrolled Students")]
+    D9[("D9: Sections")]
+    D10[("D10: Section Enrollments")]
+    D12[("D12: Student Schedules")]
+    D15[("D15: Certificate of Registration")]
+    D19[("D19: Enrollment Reports")]
+    
+    Admin -->|Report Request| P71
+    Admin -->|COR Generation Request| P73
+    Admin -->|View Request| P72
+    Dean -->|View Request| P72
+    
+    P71 -->|Enrollment Reports| Admin
+    P71 -->|Enrollment Reports| Dean
+    P72 -->|Enrollment Reports| Admin
+    P72 -->|Enrollment Reports| Dean
+    P73 -->|Student COR| Student
+    
+    P71 -->|Read| D6
+    P71 -->|Read| D9
+    P71 -->|Read| D10
+    P71 -->|Read| D1
+    P71 -->|Write| D19
+    P72 -->|Read| D19
+    P73 -->|Read| D6
+    P73 -->|Read| D10
+    P73 -->|Read| D12
+    P73 -->|Write| D15
+    
+    style P71 fill:#fff9c4,stroke:#f9a825
+    style P72 fill:#fff9c4,stroke:#f9a825
+    style P73 fill:#fff9c4,stroke:#f9a825
+                </div>
+            </div>
+            
+            <!-- 8.0 Chatbot Service -->
+            <h3>8.0 Chatbot Service (Level 1)</h3>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    Student[Student]
+    
+    P81[8.1<br/>Process Query]
+    P82[8.2<br/>Retrieve FAQ]
+    P83[8.3<br/>Log Interaction]
+    
+    D17[("D17: Chatbot FAQs")]
+    D18[("D18: Chatbot History")]
+    
+    Student -->|Query| P81
+    
+    P81 -->|Chatbot Response| Student
+    
+    P81 -.->|Trigger| P82
+    P82 -->|Read| D17
+    P82 -.->|Trigger| P83
+    P83 -->|Write| D18
+    
+    style P81 fill:#e1bee7,stroke:#8e24aa
+    style P82 fill:#e1bee7,stroke:#8e24aa
+    style P83 fill:#e1bee7,stroke:#8e24aa
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
